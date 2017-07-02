@@ -7,7 +7,7 @@ import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.View;
 
-public class ViewPagerAdapterState implements Parcelable {
+class ViewPagerAdapterState implements Parcelable {
 
     public static final Creator<ViewPagerAdapterState> CREATOR = new Creator<ViewPagerAdapterState>() {
 
@@ -26,7 +26,7 @@ public class ViewPagerAdapterState implements Parcelable {
     private final SparseIntArray viewIds;
     private final SparseArray<SparseArray<Parcelable>> viewStates;
 
-    public static ViewPagerAdapterState newInstance() {
+    static ViewPagerAdapterState newInstance() {
         SparseIntArray viewIds = new SparseIntArray();
         SparseArray<SparseArray<Parcelable>> viewStates = new SparseArray<>();
         return new ViewPagerAdapterState(viewIds, viewStates);
@@ -63,16 +63,16 @@ public class ViewPagerAdapterState implements Parcelable {
         this.viewStates = viewStates;
     }
 
-    public void put(int viewId, int position, SparseArray<Parcelable> viewState) {
+    void put(int viewId, int position, SparseArray<Parcelable> viewState) {
         viewIds.put(position, viewId);
         viewStates.put(position, viewState);
     }
 
-    public SparseArray<Parcelable> getViewState(int position) {
+    SparseArray<Parcelable> getViewState(int position) {
         return viewStates.get(position);
     }
 
-    public int getId(int position) {
+    int getId(int position) {
         return viewIds.get(position, View.NO_ID);
     }
 
