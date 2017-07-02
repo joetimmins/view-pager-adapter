@@ -21,7 +21,7 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
     private ViewPagerAdapterState viewPagerAdapterState = ViewPagerAdapterState.newInstance();
 
     @Override
-    public V instantiateItem(ViewGroup container, int position) {
+    public final V instantiateItem(ViewGroup container, int position) {
         V view = createView(container, position);
         SparseArray<Parcelable> viewState = viewPagerAdapterState.getViewState(position);
 
@@ -64,7 +64,7 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
      */
     private void bindView(V view, int position, @Nullable SparseArray<Parcelable> viewState) {
         bindView(view, position);
-        restoreHierarchyState(view, position, viewState);
+        restoreHierarchyState(view, viewState);
     }
 
     /**
@@ -79,17 +79,16 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
      * Restore state on the given page view.
      *
      * @param view      the page view to restore state on
-     * @param position  the position of the data set that is to be represented by this view
      * @param viewState the state of the view
      */
-    protected void restoreHierarchyState(V view, int position, @Nullable SparseArray<Parcelable> viewState) {
+    private void restoreHierarchyState(V view, @Nullable SparseArray<Parcelable> viewState) {
         if (viewState != null) {
             view.restoreHierarchyState(viewState);
         }
     }
 
     @Override
-    public void notifyDataSetChanged() {
+    public final void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         for (Map.Entry<V, Integer> entry : instantiatedViews.entrySet()) {
             int position = entry.getValue();
@@ -101,7 +100,7 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
     @SuppressWarnings("unchecked")
     // `key` is the object we return in `instantiateItem(ViewGroup container, int position)`
     @Override
-    public void destroyItem(ViewGroup container, int position, Object key) {
+    public final void destroyItem(ViewGroup container, int position, Object key) {
         V view = (V) key;
         saveViewState(position, view);
         container.removeView(view);
@@ -110,7 +109,7 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
 
     private void saveViewState(int position, V view) {
         SparseArray<Parcelable> viewState = new SparseArray<>();
-        saveHierarchyState(view, position, viewState);
+        saveHierarchyState(view, viewState);
         viewPagerAdapterState.put(view.getId(), position, viewState);
     }
 
@@ -118,15 +117,14 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
      * Save state on the given page view.
      *
      * @param view      the page view to restore state on
-     * @param position  the position of the data set that is to be represented by this view
      * @param viewState the state of the view
      */
-    protected void saveHierarchyState(V view, int position, SparseArray<Parcelable> viewState) {
+    private void saveHierarchyState(V view, SparseArray<Parcelable> viewState) {
         view.saveHierarchyState(viewState);
     }
 
     @Override
-    public Parcelable saveState() {
+    public final Parcelable saveState() {
         for (Map.Entry<V, Integer> entry : instantiatedViews.entrySet()) {
             int position = entry.getValue();
             V view = entry.getKey();
@@ -136,7 +134,7 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
     }
 
     @Override
-    public void restoreState(Parcelable state, ClassLoader loader) {
+    public final void restoreState(Parcelable state, ClassLoader loader) {
         if (state instanceof ViewPagerAdapterState) {
             this.viewPagerAdapterState = ((ViewPagerAdapterState) state);
         } else {
@@ -145,7 +143,7 @@ public abstract class ViewPagerAdapter<V extends View> extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object key) {
+    public final boolean isViewFromObject(View view, Object key) {
         return view.equals(key);
     }
 }
