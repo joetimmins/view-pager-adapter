@@ -6,7 +6,7 @@ A ViewPagerAdapter for your ViewPager. This implementation will attempt to rebin
 
 ## Simple usage
 
-`ViewPagerAdapter` is typed with the data you want to display on each page, and the view on which to display it, so you can specify your requirement quite explicitly. 
+`ViewPagerAdapter` is typed with the data you want to display on each page, and the view on which to display it, so you can specify your requirements quite explicitly. 
 
 It's simple to use - just implement the `ViewCreator` and `ViewBinder` interfaces, and pass them to the `ViewPagerAdapter` constructor along with your data.
 
