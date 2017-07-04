@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.RecyclerView;
+
+import com.novoda.viewpageradapter.ViewPagerAdapter;
 
 public class DemoActivity extends Activity implements ItemClickListener {
 
-    private PagesAdapter pagerAdapter;
+    private ViewPagerAdapter<Page, RecyclerView> viewPagerAdapter;
     private Pages pages;
 
     @Override
@@ -24,16 +27,16 @@ public class DemoActivity extends Activity implements ItemClickListener {
                 Page.newInstance(5, 23, Color.CYAN)
         );
 
-        pagerAdapter = new PagesAdapter(this, pages);
-        ((ViewPager) findViewById(R.id.pager)).setAdapter(pagerAdapter);
+        PagesAdapterFactory pagerAdapterFactory = new PagesAdapterFactory(this, pages);
+        viewPagerAdapter = pagerAdapterFactory.build();
+        ((ViewPager) findViewById(R.id.pager)).setAdapter(viewPagerAdapter);
     }
 
     @Override
     public void onClick(Item item) {
         this.pages = pages.copyButToggleFavoriteFor(item);
 
-        pagerAdapter.setPages(pages);
-        pagerAdapter.notifyDataSetChanged();
+        viewPagerAdapter.setItems(pages);
+        viewPagerAdapter.notifyDataSetChanged();
     }
-
 }
