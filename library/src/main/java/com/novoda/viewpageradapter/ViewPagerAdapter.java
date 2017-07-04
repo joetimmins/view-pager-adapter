@@ -150,11 +150,4 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
         this.items = items;
     }
 
-    public interface ViewCreator<T, V extends View> {
-        V createView(T item, ViewGroup container);
-    }
-
-    public interface ViewBinder<T, V extends View> {
-        void bindView(T item, V view);
-    }
 }

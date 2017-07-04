@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.novoda.viewpageradapter.ViewBinder;
+import com.novoda.viewpageradapter.ViewCreator;
 import com.novoda.viewpageradapter.ViewPagerAdapter;
 
 import java.util.List;
@@ -20,7 +22,7 @@ class PagesAdapterFactory {
         this.pages = pages;
     }
 
-    private ViewPagerAdapter.ViewCreator<Page, RecyclerView> viewCreator = new ViewPagerAdapter.ViewCreator<Page, RecyclerView>() {
+    private ViewCreator<Page, RecyclerView> viewCreator = new ViewCreator<Page, RecyclerView>() {
         @Override
         public RecyclerView createView(Page item, ViewGroup container) {
             Log.d("VPA", "createView: " + item);
@@ -33,7 +35,7 @@ class PagesAdapterFactory {
         }
     };
 
-    private ViewPagerAdapter.ViewBinder<Page, RecyclerView> viewBinder = new ViewPagerAdapter.ViewBinder<Page, RecyclerView>() {
+    private ViewBinder<Page, RecyclerView> viewBinder = new ViewBinder<Page, RecyclerView>() {
         @Override
         public void bindView(Page item, RecyclerView view) {
             Log.d("VPA", "bindView: " + item);
