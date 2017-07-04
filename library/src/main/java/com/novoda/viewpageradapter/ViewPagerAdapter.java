@@ -34,14 +34,15 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
 
     @Override
     public final V instantiateItem(ViewGroup container, int position) {
-        V view = createView(container, position);
-        SparseArray<Parcelable> viewState = viewPagerAdapterState.getViewState(position);
+        T item = items.get(position);
+        V view = viewCreator.createView(item, container);
 
         assertViewHasNoId(position, view);
         int restoredId = viewPagerAdapterState.getId(position);
         view.setId(restoredId == View.NO_ID ? viewIdGenerator.generateViewId() : restoredId);
 
-        bindView(view, position, viewState);
+        SparseArray<Parcelable> viewState = viewPagerAdapterState.getViewState(position);
+        bindView(item, view, viewState);
         instantiatedViews.put(view, position);
         container.addView(view);
 
@@ -56,26 +57,16 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
         }
     }
 
-    private V createView(ViewGroup container, int position) {
-        T item = items.get(position);
-        return viewCreator.createView(item, container);
-    }
-
     /**
-     * Bind the view to the item at the given position with view state.
+     * Bind the view to the given item and restore view state.
      *
+     * @param item      the item to bind
      * @param view      the page view to bind
-     * @param position  the position of the data set that is to be represented by this view
      * @param viewState the state of the view
      */
-    private void bindView(V view, int position, @Nullable SparseArray<Parcelable> viewState) {
-        bindView(view, position);
-        restoreHierarchyState(view, viewState);
-    }
-
-    private void bindView(V view, int position) {
-        T item = items.get(position);
+    private void bindView(T item, V view, @Nullable SparseArray<Parcelable> viewState) {
         viewBinder.bindView(item, view);
+        restoreHierarchyState(view, viewState);
     }
 
     /**
@@ -96,7 +87,7 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
         for (Map.Entry<V, Integer> entry : instantiatedViews.entrySet()) {
             int position = entry.getValue();
             SparseArray<Parcelable> viewState = viewPagerAdapterState.getViewState(position);
-            bindView(entry.getKey(), position, viewState);
+            bindView(items.get(position), entry.getKey(), viewState);
         }
     }
 
@@ -151,11 +142,11 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
     }
 
     @Override
-    public int getCount() {
+    public final int getCount() {
         return items.size();
     }
 
-    public void setItems(List<T> items) {
+    public final void setItems(List<T> items) {
         this.items = items;
     }
 
@@ -166,5 +157,4 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
     public interface ViewBinder<T, V extends View> {
         void bindView(T item, V view);
     }
-
 }
