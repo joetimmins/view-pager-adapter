@@ -22,14 +22,29 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
 
     private final ViewCreator<T, V> viewCreator;
     private final ViewBinder<T, V> viewBinder;
+    private final PageTitleCreator<T> pageTitleCreator;
 
     private ViewPagerAdapterState viewPagerAdapterState = ViewPagerAdapterState.newInstance();
     private List<T> items = new ArrayList<>();
 
     public ViewPagerAdapter(List<T> items, ViewCreator<T, V> viewCreator, ViewBinder<T, V> viewBinder) {
+        this.items = items;
         this.viewCreator = viewCreator;
         this.viewBinder = viewBinder;
+        this.pageTitleCreator = new PageTitleCreator<T>() {
+            @Override
+            public CharSequence createTitle(T item) {
+                int position = ViewPagerAdapter.this.items.indexOf(item);
+                return ViewPagerAdapter.super.getPageTitle(position);
+            }
+        };
+    }
+
+    public ViewPagerAdapter(List<T> items, ViewCreator<T, V> viewCreator, ViewBinder<T, V> viewBinder, PageTitleCreator<T> pageTitleCreator) {
         this.items = items;
+        this.viewCreator = viewCreator;
+        this.viewBinder = viewBinder;
+        this.pageTitleCreator = pageTitleCreator;
     }
 
     @Override
@@ -146,8 +161,13 @@ public final class ViewPagerAdapter<T, V extends View> extends PagerAdapter {
         return items.size();
     }
 
+    @Override
+    public final CharSequence getPageTitle(int position) {
+        T item = items.get(position);
+        return pageTitleCreator.createTitle(item);
+    }
+
     public final void setItems(List<T> items) {
         this.items = items;
     }
-
 }

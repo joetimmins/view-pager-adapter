@@ -55,4 +55,7 @@ class Page {
         return items.contains(item);
     }
 
+    String title() {
+        return String.valueOf(pageNumber);
+    }
 }

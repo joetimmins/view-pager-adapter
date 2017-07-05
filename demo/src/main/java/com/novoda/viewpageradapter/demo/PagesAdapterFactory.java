@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.novoda.viewpageradapter.PageTitleCreator;
 import com.novoda.viewpageradapter.ViewBinder;
 import com.novoda.viewpageradapter.ViewCreator;
 import com.novoda.viewpageradapter.ViewPagerAdapter;
@@ -44,8 +45,14 @@ class PagesAdapterFactory {
         }
     };
 
-    ViewPagerAdapter<Page, RecyclerView> build() {
-        return new ViewPagerAdapter<>(pages, viewCreator, viewBinder);
-    }
+    private PageTitleCreator<Page> pageTitleCreator = new PageTitleCreator<Page>() {
+        @Override
+        public CharSequence createTitle(Page item) {
+            return item.title();
+        }
+    };
 
+    ViewPagerAdapter<Page, RecyclerView> build() {
+        return new ViewPagerAdapter<>(pages, viewCreator, viewBinder, pageTitleCreator);
+    }
 }
